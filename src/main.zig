@@ -90,6 +90,6 @@ pub fn main() !void {
 
         ray.DrawRectangle(@floatToInt(c_int, game.rightWall), 0, 500, 500, hex(0x660000));
         ray.DrawRectangle(0, 500, 1000, 500, hex(0x000066));
-        ray.WDrawTextureV(mouse, game.cursor, hex(0xFFFFFF));
+        ray.WDrawTextureV(mouse, .{ .x = game.cursor.x - 1, .y = game.cursor.y - 2 }, hex(0xFFFFFF));
     }
 }
