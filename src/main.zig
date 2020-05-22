@@ -72,7 +72,11 @@ pub fn main() !void {
         }
         if (game.cursor.x > game.rightWall) {
             const diff = game.cursor.x - game.rightWall;
-            game.rightWall += diff / 10;
+            game.rightWall += diff;
+        }
+        const rwOffset = game.rightWall - 500;
+        game.rightWall -= rwOffset * 0.1;
+        if (game.cursor.x > game.rightWall) {
             game.cursor.x = game.rightWall;
         }
 
