@@ -15,6 +15,7 @@ pub fn hex(comptime color: u24) ray.Color {
 const Game = struct {
     cursor: ray.Vector2 = ray.Vector2{ .x = 200, .y = 100 },
     cursorVelocity: ray.Vector2 = ray.Vector2{ .x = 0, .y = 0 },
+    rightWall: f32 = 500,
 };
 
 pub fn main() !void {
@@ -69,9 +70,10 @@ pub fn main() !void {
             game.cursor.x = 0;
             game.cursorVelocity.x = std.math.max(game.cursorVelocity.x, 0);
         }
-        if (game.cursor.x > 900) {
-            game.cursor.x = 900;
-            game.cursorVelocity.x = std.math.min(game.cursorVelocity.x, 900);
+        if (game.cursor.x > game.rightWall) {
+            const diff = game.cursor.x - game.rightWall;
+            game.rightWall += diff / 10;
+            game.cursor.x = game.rightWall;
         }
 
         ray.BeginDrawing();
@@ -82,6 +84,7 @@ pub fn main() !void {
         ray.BeginMode2D(camera);
         defer ray.EndMode2D();
 
+        ray.DrawRectangle(@floatToInt(c_int, game.rightWall), 0, 500, 500, hex(0x660000));
         ray.WDrawTextureV(mouse, game.cursor, hex(0xFFFFFF));
     }
 }
