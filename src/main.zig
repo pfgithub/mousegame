@@ -1,5 +1,5 @@
 const std = @import("std");
-const ray = @import("raylib");
+const ray = @import("workaround.zig");
 
 pub extern fn GetMousePosition() ray.Vector2;
 
@@ -16,13 +16,13 @@ const Game = struct {
     cursor: ray.Vector2 = ray.Vector2{ .x = 200, .y = 100 },
 };
 
-pub fn main() anyerror!void {
+pub fn main() !void {
     const screenWidth = 800;
     const screenHeight = 400;
 
     ray.InitWindow(screenWidth, screenHeight, "window");
     defer ray.CloseWindow();
-    ray.SetExitKey(@ptrCast(*const ray.KeyboardKey, &@as(c_int, 0)).*);
+    ray.SetExitKey(0);
 
     ray.SetTargetFPS(240);
 
@@ -49,13 +49,9 @@ pub fn main() anyerror!void {
         ray.BeginMode2D(camera);
         defer ray.EndMode2D();
 
-        ray.DrawTextureV(mouse, game.cursor, hex(0xFFFFFF));
+        ray.WDrawTextureV(mouse, game.cursor, hex(0xFFFFFF));
 
-        const mousePos: ray.Vector2 = blk: {
-            const mouseposscreenspace = GetMousePosition();
-            var mousePos: ray.Vector2 = undefined;
-            ray.GetScreenToWorld2D(&mouseposscreenspace, &camera, &mousepos);
-            return mousePos;
-        };
+        const mousePos = ray.WGetScreenToWorld2D(GetMousePosition(), camera);
+        std.debug.warn("mpos: {}\n", .{mousePos});
     }
 }
