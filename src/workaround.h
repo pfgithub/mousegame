@@ -17,3 +17,9 @@ void _wGetScreenToWorld2D(
 ) IMPL({
 	*out = GetScreenToWorld2D(*position, *camera);
 })
+
+void _wDrawRectangleRec(
+	const Rectangle* rec, const Color* color
+) IMPL({
+	DrawRectangleRec(*rec, *color);
+})

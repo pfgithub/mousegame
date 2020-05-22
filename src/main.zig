@@ -16,6 +16,8 @@ const Game = struct {
     cursor: ray.Vector2 = ray.Vector2{ .x = 200, .y = 100 },
     cursorVelocity: ray.Vector2 = ray.Vector2{ .x = 0, .y = 0 },
     rightWall: f32 = 500,
+    rightWallTarget: f32 = 500,
+    cube: ray.Rectangle = ray.Rectangle{ .x = 240, .y = 240, .width = 60, .height = 60 },
 };
 
 pub fn main() !void {
@@ -61,8 +63,8 @@ pub fn main() !void {
             game.cursor.y = 0;
             game.cursorVelocity.y = std.math.max(game.cursorVelocity.y, 0);
         }
-        if (game.cursor.y > 500) {
-            game.cursor.y = 500;
+        if (game.cursor.y > game.rightWallTarget) {
+            game.cursor.y = game.rightWallTarget;
             game.cursorVelocity.y = 0;
             game.cursorVelocity.y = std.math.min(game.cursorVelocity.y, 0);
         }
@@ -74,7 +76,7 @@ pub fn main() !void {
             const diff = game.cursor.x - game.rightWall;
             game.rightWall += diff;
         }
-        const rwOffset = game.rightWall - 500;
+        const rwOffset = game.rightWall - game.rightWallTarget;
         game.rightWall -= rwOffset * 5 * delta;
         if (game.cursor.x > game.rightWall) {
             game.cursor.x = game.rightWall;
@@ -88,8 +90,9 @@ pub fn main() !void {
         ray.BeginMode2D(camera);
         defer ray.EndMode2D();
 
-        ray.DrawRectangle(@floatToInt(c_int, game.rightWall), 0, 500, 500, hex(0x660000));
-        ray.DrawRectangle(0, 500, 1000, 500, hex(0x000066));
+        ray.WDrawRectangleRec(.{ .x = game.rightWall, .y = 0, .width = 500, .height = 500 }, hex(0x660000));
+        ray.WDrawRectangleRec(game.cube, hex(0x000066));
+        ray.WDrawRectangleRec(.{ .x = 0, .y = 500, .width = 1000, .height = 500 }, hex(0x000066));
         ray.WDrawTextureV(mouse, .{ .x = game.cursor.x - 1, .y = game.cursor.y - 2 }, hex(0xFFFFFF));
     }
 }
