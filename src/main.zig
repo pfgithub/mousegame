@@ -89,6 +89,7 @@ pub fn main() !void {
         defer ray.EndMode2D();
 
         ray.DrawRectangle(@floatToInt(c_int, game.rightWall), 0, 500, 500, hex(0x660000));
+        ray.DrawRectangle(0, 500, 1000, 500, hex(0x000066));
         ray.WDrawTextureV(mouse, game.cursor, hex(0xFFFFFF));
     }
 }
