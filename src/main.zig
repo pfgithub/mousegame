@@ -53,12 +53,24 @@ pub fn main() !void {
         game.cursor.x += std.math.clamp(mousePos.x, -10_000 * delta, 10_000 * delta);
         game.cursor.y += std.math.clamp(mousePos.y, -10_000 * delta, 10_000 * delta);
 
-        game.cursorVelocity.y += 1 * delta;
+        game.cursorVelocity.y += 5 * delta;
         game.cursor.x += game.cursorVelocity.x;
         game.cursor.y += game.cursorVelocity.y;
+        if (game.cursor.y < 0) {
+            game.cursor.y = 0;
+            game.cursorVelocity.y = std.math.max(game.cursorVelocity.y, 0);
+        }
         if (game.cursor.y > 500) {
             game.cursor.y = 500;
             game.cursorVelocity.y = 0;
+        }
+        if (game.cursor.x < 0) {
+            game.cursor.x = 0;
+            game.cursorVelocity.x /= 2;
+        }
+        if (game.cursor.x > 900) {
+            game.cursor.x = 900;
+            game.cursorVelocity.x /= 2;
         }
 
         ray.BeginDrawing();
