@@ -63,12 +63,15 @@ pub fn main() !void {
         if (game.cursor.y > 500) {
             game.cursor.y = 500;
             game.cursorVelocity.y = 0;
+            game.cursorVelocity.y = std.math.min(game.cursorVelocity.y, 0);
         }
         if (game.cursor.x < 0) {
             game.cursor.x = 0;
+            game.cursorVelocity.x = std.math.max(game.cursorVelocity.x, 0);
         }
         if (game.cursor.x > 900) {
             game.cursor.x = 900;
+            game.cursorVelocity.x = std.math.min(game.cursorVelocity.x, 900);
         }
 
         ray.BeginDrawing();
