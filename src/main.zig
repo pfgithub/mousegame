@@ -54,9 +54,9 @@ pub fn main() !void {
         game.cursor.x += std.math.clamp(mousePos.x, -10_000 * delta, 10_000 * delta);
         game.cursor.y += std.math.clamp(mousePos.y, -10_000 * delta, 10_000 * delta);
 
-        game.cursorVelocity.y += 5 * delta;
-        game.cursor.x += game.cursorVelocity.x;
-        game.cursor.y += game.cursorVelocity.y;
+        game.cursorVelocity.y += 5;
+        game.cursor.x += game.cursorVelocity.x * delta;
+        game.cursor.y += game.cursorVelocity.y * delta;
         if (game.cursor.y < 0) {
             game.cursor.y = 0;
             game.cursorVelocity.y = std.math.max(game.cursorVelocity.y, 0);
