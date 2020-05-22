@@ -1,0 +1,4 @@
+[submodule "lib/raylib-zig"]
+	path = lib/raylib-zig
+	url = https://github.com/Not-Nik/raylib-zig.git
+	branch = workaround
