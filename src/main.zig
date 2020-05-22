@@ -66,11 +66,9 @@ pub fn main() !void {
         }
         if (game.cursor.x < 0) {
             game.cursor.x = 0;
-            game.cursorVelocity.x /= 2;
         }
         if (game.cursor.x > 900) {
             game.cursor.x = 900;
-            game.cursorVelocity.x /= 2;
         }
 
         ray.BeginDrawing();
