@@ -18,6 +18,37 @@ const Game = struct {
     rightWall: f32 = 500,
     rightWallTarget: f32 = 500,
     cube: ray.Rectangle = ray.Rectangle{ .x = 240, .y = 240, .width = 60, .height = 60 },
+
+    fn moveCursor(game: *Game, x: f32, y: f32) void {
+        // I want this to eg support slopes. it will check line collision
+        // to see if moving the cursor hit any lines, and then handle slopes
+        // somehow? like if --- hits /, it will end up going /
+        // we're already doing that for horizontal and vertical slopes, but
+        // that is easy
+        // var resX: f32 = x;
+        // var resY: f32 = y;
+        game.cursor.x += x;
+        game.cursor.y += y;
+
+        if (game.cursor.y < 0) {
+            game.cursor.y = 0;
+            game.cursorVelocity.y = std.math.max(game.cursorVelocity.y, 0);
+        }
+        if (game.cursor.y > game.rightWallTarget) {
+            game.cursor.y = game.rightWallTarget;
+            game.cursorVelocity.y = 0;
+            game.cursorVelocity.y = std.math.min(game.cursorVelocity.y, 0);
+        }
+        if (game.cursor.x < 0) {
+            game.cursor.x = 0;
+            game.cursorVelocity.x = std.math.max(game.cursorVelocity.x, 0);
+        }
+        if (game.cursor.x > game.rightWall) {
+            const diff = game.cursor.x - game.rightWall;
+            game.rightWall += diff;
+            game.cursor.x -= diff / 2;
+        }
+    }
 };
 
 pub fn main() !void {
@@ -53,34 +84,19 @@ pub fn main() !void {
         };
         previousMousePos = currentMousePos;
 
-        game.cursor.x += std.math.clamp(mousePos.x, -10_000 * delta, 10_000 * delta);
-        game.cursor.y += std.math.clamp(mousePos.y, -10_000 * delta, 10_000 * delta);
-
         game.cursorVelocity.y += 5;
-        game.cursor.x += game.cursorVelocity.x * delta;
-        game.cursor.y += game.cursorVelocity.y * delta;
-        if (game.cursor.y < 0) {
-            game.cursor.y = 0;
-            game.cursorVelocity.y = std.math.max(game.cursorVelocity.y, 0);
-        }
-        if (game.cursor.y > game.rightWallTarget) {
-            game.cursor.y = game.rightWallTarget;
-            game.cursorVelocity.y = 0;
-            game.cursorVelocity.y = std.math.min(game.cursorVelocity.y, 0);
-        }
-        if (game.cursor.x < 0) {
-            game.cursor.x = 0;
-            game.cursorVelocity.x = std.math.max(game.cursorVelocity.x, 0);
-        }
-        if (game.cursor.x > game.rightWall) {
-            const diff = game.cursor.x - game.rightWall;
-            game.rightWall += diff;
-        }
         const rwOffset = game.rightWall - game.rightWallTarget;
         game.rightWall -= rwOffset * 5 * delta;
-        if (game.cursor.x > game.rightWall) {
-            game.cursor.x = game.rightWall;
-        }
+
+        game.moveCursor(
+            std.math.clamp(mousePos.x, -10_000 * delta, 10_000 * delta),
+            std.math.clamp(mousePos.y, -10_000 * delta, 10_000 * delta),
+        );
+
+        game.moveCursor(
+            game.cursorVelocity.x * delta,
+            game.cursorVelocity.y * delta,
+        );
 
         ray.BeginDrawing();
         defer ray.EndDrawing();
