@@ -75,7 +75,7 @@ pub fn main() !void {
             game.rightWall += diff;
         }
         const rwOffset = game.rightWall - 500;
-        game.rightWall -= rwOffset * 0.1;
+        game.rightWall -= rwOffset * 5 * delta;
         if (game.cursor.x > game.rightWall) {
             game.cursor.x = game.rightWall;
         }
