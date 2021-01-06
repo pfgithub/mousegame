@@ -20,13 +20,6 @@ const Game = struct {
     cube: ray.Rectangle = ray.Rectangle{ .x = 240, .y = 240, .width = 60, .height = 60 },
 
     fn moveCursor(game: *Game, x: f32, y: f32) void {
-        // I want this to eg support slopes. it will check line collision
-        // to see if moving the cursor hit any lines, and then handle slopes
-        // somehow? like if --- hits /, it will end up going /
-        // we're already doing that for horizontal and vertical slopes, but
-        // that is easy
-        // var resX: f32 = x;
-        // var resY: f32 = y;
         game.cursor.x += x;
         game.cursor.y += y;
 
